@@ -208,9 +208,16 @@ public class Node {
                             if(arg1.getNumber() == 0) return ONE;
                             else return ZERO;
                         case "first":
+                            System.out.println("First arg: " + arg1.toString());
+                            if(!arg1.first().isNumber()){
+                                return arg1.first().first();
+                            }
                             if(arg1.isEmpty() || arg1.isNull()) System.out.println("Error: empty list " + arg1.toString());
                             else return arg1.first();
                         case "rest":
+                            if(!arg1.first().isNumber()){
+                                return arg1.first().rest();
+                            }
                             return arg1.rest();
                         case "null":
                             if(arg1.isNull() || arg1.isEmpty()) return ONE;
@@ -225,7 +232,7 @@ public class Node {
                             System.out.println("write: " + arg1 + " ");
                             return arg1;
                         case "quote":
-                            return arg1;
+                            return arg1.first();
                     }
                 } else if(member(info, bif2)){
                     if(first.getKind().equals("items")) {
@@ -280,12 +287,35 @@ public class Node {
                             if(arg1.getNumber() > 0 || arg2.getNumber() > 0) return ONE;
                             else return ZERO;
                         case "ins":
-                            Value newList = arg2;
-                            newList = arg2.insert(arg1);
-                            System.out.println("after ins: " + newList.toString());
+                            System.out.println("ins: ");
                             System.out.println("arg1: " + arg1.toString());
                             System.out.println("arg2: " + arg2.toString());
-                            return newList;
+                            ArrayList<Value> nums = new ArrayList<>();
+
+                            Value sub = arg1;
+
+                            if(arg2.isNumber()){
+                                arg2 = new Value();
+                                return arg2.insert(arg1);
+                            }
+                            // just a num, so insert
+                            if(sub.isNumber()){
+                                arg2 = arg2.insert(arg1);
+                                return arg2;
+                            }
+                            else { // is a list, so merge lists
+                                while (!sub.isEmpty()) {
+                                    Value f = sub.first();
+                                    sub = sub.rest();
+
+                                    nums.add(f);
+                                }
+                                for (int i = nums.size() - 1; i >= 0; i--) {
+                                    arg2 = arg2.insert(nums.get(i));
+                                }
+                            }
+
+                            return arg2;
                     }
                 }
                 // Handles and locates user defined functions
@@ -322,9 +352,6 @@ public class Node {
             if (second == null){
                 //System.out.println("Inserting " + first.toString());
                 if(first.getKind().equals("name")){
-                    if(params.retrieve(first.info).isEmpty()){
-
-                    }
                     Value holder = first.evaluate(defsList, defNames, params);
                     if(!holder.isNull()) return holder;
                 }
@@ -357,7 +384,8 @@ public class Node {
         ArrayList<String> paramNames = new ArrayList<>();
 
         Value fromUser = userParams.evaluate(defsList, defNames, params);
-        System.out.println(fromUser.toString());
+        System.out.println("user params: " + fromUser.toString());
+        System.out.println("for: " + info);
 
         Value f = fromUser.first();
         Value r = fromUser.rest();
@@ -374,6 +402,7 @@ public class Node {
         if(paramNames.size() == 1 && f.isNumber() && !r.isEmpty()){
             p.add(paramNames.get(0), fromUser);
         }
+        // separate case for lists like in binTreeIOT needed???
         else { // assign user params to param names
             for (int i = 0; i < paramNames.size(); i++) {
                 p.add(paramNames.get(i), f);

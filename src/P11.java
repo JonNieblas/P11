@@ -44,7 +44,7 @@ public class P11 {
 
             Value ans = root.evaluate(defs, defNames, null);
 
-            System.out.println(ans.toString());
+            System.out.println("ans: " + ans.toString());
 
             try {
                 File replFile = new File("repl/input.txt");
