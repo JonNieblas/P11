@@ -5,7 +5,7 @@ P11 allows for a file of user-defined functions to be passed, giving the user th
 
 # Getting Started
 Getting started with P11 is quite simple. Included with P11 are three test files located in the 
-[user_defined](../src/user_defined) directory that can immediately be passed as arguments. Compile and run P11, then
+[user_defined](src/user_defined) directory that can immediately be passed as arguments. Compile and run P11, then
 give some of the examples below a shot!
 
 ```
@@ -14,7 +14,7 @@ $ javac *.java
 $ java P11 test
 ```
 
-#### A few examples of how to use the REPL with the file [test](../src/user_defined/test) passed as an arg:
+#### A few examples of how to use the REPL with the file [test](src/user_defined/test) passed as an arg:
 ```
 > (plus 1 2) // Returns 3
 > (minus (plus 1 2) (times 4 7)) // Returns -25
@@ -91,40 +91,40 @@ P11 has multiple built-in functions that take in two, one, or zero arguments of 
 |(quit)|Halt execution.|
 
 # Structure
-### [P11](../src/P11.java)
+### [P11](src/P11.java)
 The P11 class is the main driver of the project. It can take the file name containing user-defined functions as an argument.
 
-### [Lexer](../src/Lexer.java)
+### [Lexer](src/Lexer.java)
 The Lexer class breaks apart P11 code into tokens through a series of states.
 
-### [Parser](../src/Parser.java)
+### [Parser](src/Parser.java)
 The Parser class examines tokens and deduces if a program is valid or not. If it is, it organizes the programming into a tree of nodes.
 
-### [Node](../src/Node.java)
+### [Node](src/Node.java)
 The Node class evaluates the program recursively, returning the answer to a given command after evaluation of a tree of nodes.
 
-### [Token](../src/Token.java)
+### [Token](src/Token.java)
 The Token class allows the Lexer to create token objects.
 
-### [Value](../src/Value.java)
+### [Value](src/Value.java)
 The Value class allows Node to create objects during evaluation that can either be a list or a number.
 
-### [StackFrame](../src/StackFrame.java)
+### [StackFrame](src/StackFrame.java)
 The StackFrame class allows for parameters for userdefined functions to be assigned to names, so that they may be called on later during evaluation.
 
-### [Basic](../src/Basic.java), [Camera](../src/Camera.java), [TreeViewer](../src/TreeViewer.java)
+### [Basic](src/Basic.java), [Camera](src/Camera.java), [TreeViewer](src/TreeViewer.java)
 These classes were built by Dr. Shultz to display the parse trees from either the user-defined functions or the REPL commands.
 
-### [/user_defined](../src/user_defined)
+### [/user_defined](src/user_defined)
 Contains all user_defined functions, including three as an example of how user-defined functions should be structured.
 
 ## Notes
-* Currently, only the user_defined functions in [test](../src/user_defined/test) are actually working.
-* In order for the other two to work, [Parser](../src/Parser.java) may need some re-building.
+* Currently, only the user_defined functions in [test](src/user_defined/test) are actually working.
+* In order for the other two to work, [Parser](src/Parser.java) may need some re-building.
 
 ## TODO
 - [ ] Make changes to how lists containing functions are parsed.
-- [ ] Successfully test [pastri](../src/user_defined/pastri) and [binTreeIOT](../src/user_defined/binTreeIOT).
+- [ ] Successfully test [pastri](src/user_defined/pastri) and [binTreeIOT](src/user_defined/binTreeIOT).
 - [ ] Remove unnecessary comments.
-- [ ] Simplify and clean up some areas in [Parser](../src/Parser.java) and [Node](../src/Node.java).
-- [ ] Remove any unecessary states from [Lexer](../src/Lexer.java).
+- [ ] Simplify and clean up some areas in [Parser](src/Parser.java) and [Node](src/Node.java).
+- [ ] Remove any unecessary states from [Lexer](src/Lexer.java).
