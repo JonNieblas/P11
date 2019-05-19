@@ -360,19 +360,26 @@ public class Node {
 
         Value f = fromUser.first();
         Value r = fromUser.rest();
+
         // extract the paramNames
         Node param = def.first;
         while(param != null){
-            // extract all param names from original def
             paramNames.add(param.getInfo());
             param = param.first;
         }
 
-        for(int i = 0; i < paramNames.size(); i++){
-            p.add(paramNames.get(i), f);
-            if(!r.isEmpty()){
-                f = r.first();
-                r = r.rest();
+        // If only one user param and first is num, just take fromUser and assign it to that param.
+        // Chances are that a list was passed, although differently than usual.
+        if(paramNames.size() == 1 && f.isNumber() && !r.isEmpty()){
+            p.add(paramNames.get(0), fromUser);
+        }
+        else { // assign user params to param names
+            for (int i = 0; i < paramNames.size(); i++) {
+                p.add(paramNames.get(i), f);
+                if (!r.isEmpty()) {
+                    f = r.first();
+                    r = r.rest();
+                }
             }
         }
 
