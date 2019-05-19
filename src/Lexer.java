@@ -103,7 +103,6 @@ public class Lexer {
                         state = 2;
                     }
                     else if ( sym == ';' ) {
-                        data += (char) sym;
                         state = 5;
                     }
                     else if (sym == '(' || sym == ')') {
@@ -173,7 +172,7 @@ public class Lexer {
 
                 else if ( state == 5 ) {
                     if ( sym==13||sym==10 ) {
-                        done = true;
+                        state = 0;
                     }
                     else {
                         state = 5;
@@ -202,7 +201,6 @@ public class Lexer {
             }while( !done );
 
             // generate token depending on stopping state
-            Token token;
             if ( state == 1){
                 if ( data.equals("ins") || data.equals("first") ||
                         data.equals("rest") || data.equals("null") ||

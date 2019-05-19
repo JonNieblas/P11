@@ -22,7 +22,6 @@ public class StackFrame {
     public Value retrieve( String name ) {
         for (int k=0; k<names.size(); k++) {
             if (names.get(k).equals(name)) {
-                System.out.println("Returning param");
                 return values.get(k);
             }
         }
