@@ -21,7 +21,7 @@ public class P11 {
         Scanner scan = new Scanner(System.in);
         Node root2 = fileParser.parseProgram();
         fileLex.closeStream();
-       //TreeViewer viewer = new TreeViewer("Parse Tree", 0, 0, 800, 500, root2);
+        //TreeViewer viewer = new TreeViewer("Parse Tree", 0, 0, 800, 500, root2);
 
 
         ArrayList<Node> defs = fileParser.getDefs(); // will this work?

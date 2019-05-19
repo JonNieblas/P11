@@ -5,8 +5,6 @@ public class Parser {
     private static Lexer lex;
     private ArrayList<Node> defs = new ArrayList<>();
     private ArrayList<String> defNames = new ArrayList<>();
-    int rParenCount = 0;
-
     public Parser( Lexer lexer) {
             lex = lexer;
     }
@@ -55,7 +53,6 @@ public class Parser {
         Node def;
         System.out.println("-----> parsing <def>:");
 
-        // needs to check for define specifically
         Token token = lex.getNextToken();
         errorCheck(token, "KEYWORD", "define");
 
@@ -85,7 +82,6 @@ public class Parser {
             def = new Node("def",name.getDetails(),first, second);
         }
 
-        // maybe go back to array list, since it works like a pointer?
         defs.add(def);
         defNames.add(def.getInfo());
         return def;
@@ -140,7 +136,7 @@ public class Parser {
         }
         // function call
         else if ( token.isKind("NAME") || token.isKind("KEYWORD")){
-            String funcType = token.getDetails(); // will be empty string if it is just a list of items
+            String funcType = token.getDetails();
             token = lex.getNextToken();
 
             if(funcType.equals("if")){
@@ -153,52 +149,18 @@ public class Parser {
                 errorCheck(token, "RPAREN");
                 return new Node("if", funcType, first, second, third);
             }
-            // Some functions/lists don't have any items, so handle these here
             if(token.isKind("RPAREN")){
                 return new Node("list", funcType, null, null);
             }
-            // encountered a nested list or function call
-            else if(token.isKind("LPAREN")){
-                // first is a list or function call
-                Node first = parseList();
+            else{
+                lex.putBackToken(token);
+                Node first = parseItems();
 
                 token = lex.getNextToken();
-                // if next item happens to be another list or function call
-                if(token.isKind("LPAREN")){
-                    Node second = parseList();
-                    token = lex.getNextToken();
-                    errorCheck(token, "RPAREN"); // close greater list
-//                    rParenCount++;
-//                    System.out.println("count: " + rParenCount);
-                    return new Node("list", funcType, first, second);
-                }
-                // if next item is just a number
-                else if(!token.isKind("RPAREN")){
-                    lex.putBackToken(token);
-                    Node second = parseItems();
-                    token = lex.getNextToken();
-                    errorCheck(token, "RPAREN");
-//                    rParenCount++;
-//                    System.out.println("count: " + rParenCount);
-                    return new Node("list", funcType, first, second);
-                }
-                // if there is no next item
-                else{
-                    errorCheck(token, "RPAREN");
-//                    rParenCount++;
-//                    System.out.println("count: " + rParenCount);
-                    return new Node("list", funcType, first, null);
-                }
+                errorCheck(token, "RPAREN");
+                return new Node("list", funcType, first, null);
+
             }
-            // only one node here, since the items of a function call are treated like a list
-            // A list will be treated exactly the same
-            lex.putBackToken(token);
-            Node first = parseItems();
-            token = lex.getNextToken();
-            errorCheck(token, "RPAREN");
-//            rParenCount++;
-//            System.out.println("count: " + rParenCount);
-            return new Node("list", funcType, first, null);
         }
         // just a list
         else {
@@ -211,14 +173,11 @@ public class Parser {
     }
 
     public Node parseItems(){
-        // wait, an Value can be an expr, or an expr followed by more items
         System.out.println("-----> parsing <items>:");
 
-        // The required expression, all items must have at least one
         Node first = parseExpr();
         Token token = lex.getNextToken();
 
-        // If there is no rparen, there are more items
         if(!token.isKind("RPAREN")){
             lex.putBackToken(token);
             Node second = parseItems();
@@ -267,9 +226,7 @@ public class Parser {
         }
     }
 
-    public ArrayList<Node> getDefs(){
-        return defs;
-    }
-    public ArrayList<String> getDefNames() { return defNames; }
+    public ArrayList<Node> getDefs(){ return defs; }
 
+    public ArrayList<String> getDefNames() { return defNames; }
 }
