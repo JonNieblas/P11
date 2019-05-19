@@ -36,7 +36,7 @@ public class Node {
         second = two;
         id = count;
         count++;
-        System.out.println(this);
+        //System.out.println(this);
     }
 
     // construct a def node with params frame for params
@@ -48,7 +48,7 @@ public class Node {
         third = three;
         id = count;
         count++;
-        System.out.println(this);
+        //System.out.println(this);
     }
 
     // construct a node with specified info
@@ -59,7 +59,7 @@ public class Node {
         second = two;
         id = count;
         count++;
-        System.out.println(this);
+        //System.out.println(this);
     }
 
     // construct a node that is essentially a token
@@ -70,7 +70,7 @@ public class Node {
         second = null;
         id = count;
         count++;
-        System.out.println(this);
+        //System.out.println(this);
     }
 
     public String toString() {
@@ -166,7 +166,7 @@ public class Node {
 
     // needs to return Value objects
     public Value evaluate(ArrayList<Node> defsList, ArrayList<String> defNames, StackFrame params) {
-        System.out.println("current kind: " + kind);
+        //System.out.println("current kind: " + kind);
         Value arg1, arg2;
 
         Value ZERO = new Value( 0 );
@@ -186,7 +186,7 @@ public class Node {
             }
         }
         else if(kind.equals("list")){
-            System.out.println("info: " + info);
+            //System.out.println("info: " + info);
             //System.out.println("Evaluating list...");
             if(!info.equals("")){
                 if(member(info, bif0)){
@@ -213,7 +213,7 @@ public class Node {
                         case "rest":
                             return arg1.rest();
                         case "null":
-                            System.out.println("Null: " + arg1.toString());
+                            //System.out.println("Null: " + arg1.toString());
                             if(arg1.isNull() || arg1.isEmpty()) return ONE;
                             else return ZERO;
                         case "num":
@@ -290,7 +290,7 @@ public class Node {
                 // Handles and locates user defined functions
                 else if(defNames.contains(info)){
                     int index = defNames.indexOf(info);
-                    System.out.println("Evaluating user defined def...");
+                   // System.out.println("Evaluating user defined def...");
                     Node def = defsList.get(index);
                     if(def.first.getKind().equals("params")) {
                         params = passParams(def, defsList, defNames, first, params); // evaluate the params passed
@@ -315,11 +315,11 @@ public class Node {
             else return third.evaluate(defsList, defNames, params);
         }
         else{ // items
-            System.out.println("Evaluating items...");
+            //System.out.println("Evaluating items...");
             Value items = new Value();
 
             if (second == null){
-                System.out.println("Inserting " + first.toString());
+                //System.out.println("Inserting " + first.toString());
                 if(first.getKind().equals("name")){
                     if(params.retrieve(first.info).isEmpty()){
 
@@ -331,7 +331,6 @@ public class Node {
                 return items;
             }
             else{
-                System.out.println(second.toString());
                 items = second.evaluate(defsList, defNames, params);
                 items = items.insert(first.evaluate(defsList, defNames, params));
                 return items;
@@ -356,45 +355,59 @@ public class Node {
         StackFrame p = new StackFrame();
         ArrayList<String> paramNames = new ArrayList<>();
 
-        Value f = null;
-        Value r = null;
+        Value fromUser = userParams.evaluate(defsList, defNames, params);
+        System.out.println(fromUser.toString());
 
-        // get user params as a list
-        Value userParamsList = userParams.evaluate(defsList, defNames, params);
-        if(!userParamsList.isEmpty()) {
-            f = userParamsList.first();
-            r = userParamsList.rest();
-        }
-
-        // get def param names
+        Value f = fromUser.first();
+        Value r = fromUser.rest();
+        // extract the paramNames
         Node param = def.first;
-
-        // if multiple args, but only one param (for lists)
-        if(param.first == null && r != null){
-            paramNames.add(param.getInfo());
-            p.add(param.getInfo(), userParamsList);
-            return p;
-        }
-
         while(param != null){
             // extract all param names from original def
             paramNames.add(param.getInfo());
             param = param.first;
         }
 
-        // add all names and values to StackFrame p
         for(int i = 0; i < paramNames.size(); i++){
-            // for items
-            if(userParams.getKind().equals("list")){
-                p.add(paramNames.get(i), userParamsList);
-            } else {
-                p.add(paramNames.get(i), f);
-                if (!r.isEmpty()) {
-                    f = r.first();
-                    r = r.rest();
-                }
+            p.add(paramNames.get(i), f);
+            if(!r.isEmpty()){
+                f = r.first();
+                r = r.rest();
             }
         }
+
+//        // get user params as a list
+//        Value userParamsList = userParams.evaluate(defsList, defNames, params);
+//        if(!userParamsList.isEmpty()) {
+//            f = userParamsList.first();
+//            r = userParamsList.rest();
+//        }
+//
+//        // get def param names
+//        Node param = def.first;
+//
+//        // if multiple args, but only one param (for lists)
+//        if(param.first == null && r != null){
+//            paramNames.add(param.getInfo());
+//            p.add(param.getInfo(), userParamsList);
+//            return p;
+//        }
+//
+
+//
+//        // add all names and values to StackFrame p
+//        for(int i = 0; i < paramNames.size(); i++){
+//            // for items
+//            if(userParams.getKind().equals("list")){
+//                p.add(paramNames.get(i), userParamsList);
+//            } else {
+//                p.add(paramNames.get(i), f);
+//                if (!r.isEmpty()) {
+//                    f = r.first();
+//                    r = r.rest();
+//                }
+//            }
+//        }
 
         return p;
     }

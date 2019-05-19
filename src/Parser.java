@@ -12,20 +12,20 @@ public class Parser {
     public Node parseProgram(){
           Token token = lex.getNextToken();
           if(token.isKind("eof")){
-              System.out.println("hitting an eof");
+              //System.out.println("hitting an eof");
             return new Node("Null","null",null,null);
           }
           errorCheck(token, "LPAREN", "(");
           token = lex.getNextToken();
           if(token.getDetails().equals("define") && token.isKind("KEYWORD")){
-              System.out.println("Parsing define...");
+              //System.out.println("Parsing define...");
               lex.putBackToken(token);
               Node first = parseDefs();
               return new Node("program", first, null);
           }
           // Pre-defined or user-defined def
           else if(token.isKind("KEYWORD") || token.isKind("NAME")){
-              System.out.println("Parsing list...");
+              //System.out.println("Parsing list...");
               lex.putBackToken(token);
               return parseList();
           }
@@ -35,7 +35,7 @@ public class Parser {
     }
 
     public Node parseDefs() {
-        System.out.println("-----> parsing <defs>:");
+        //System.out.println("-----> parsing <defs>:");
         Node first = parseDef();
 
         Token token = lex.getNextToken();
@@ -51,7 +51,7 @@ public class Parser {
 
     public Node parseDef(){
         Node def;
-        System.out.println("-----> parsing <def>:");
+        //System.out.println("-----> parsing <def>:");
 
         Token token = lex.getNextToken();
         errorCheck(token, "KEYWORD", "define");
@@ -88,7 +88,7 @@ public class Parser {
     }
 
     public Node parseParams() {
-        System.out.println("-----> parsing <params>:");
+        //System.out.println("-----> parsing <params>:");
 
         Token name = lex.getNextToken();
         errorCheck(name, "NAME");
@@ -107,7 +107,7 @@ public class Parser {
     }
 
     public Node parseExpr() {
-        System.out.println("-----> parsing <expr>:");
+       // System.out.println("-----> parsing <expr>:");
 
         Token token = lex.getNextToken();
 
@@ -127,7 +127,7 @@ public class Parser {
     }
 
     public Node parseList(){
-        System.out.println("-----> parsing <list>:");
+       // System.out.println("-----> parsing <list>:");
 
         Token token = lex.getNextToken();
         // empty list
@@ -173,7 +173,7 @@ public class Parser {
     }
 
     public Node parseItems(){
-        System.out.println("-----> parsing <items>:");
+        //System.out.println("-----> parsing <items>:");
 
         Node first = parseExpr();
         Token token = lex.getNextToken();

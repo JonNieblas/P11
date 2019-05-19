@@ -35,26 +35,22 @@ public class P11 {
 
         // REPL bash
         while(!command.equals("(quit)")) {
-            // Objects relating to REPL
             Lexer inputLex = new Lexer(command);
             Parser inputParser = new Parser(inputLex);
-            // root node for REPL
             Node root = inputParser.parseProgram();
 
             // display parse tree for debugging/testing:
-            //TreeViewer viewer = new TreeViewer("Parse Tree", 0, 0, 800, 500, root);
+            //TreeViewer viewer2 = new TreeViewer("Parse Tree", 0, 0, 800, 500, root);
 
             Value ans = root.evaluate(defs, defNames, null);
 
-            // return the answer
             System.out.println(ans.toString());
 
-            // try deleting repl.txt
             try {
                 File replFile = new File("repl/input.txt");
                 inputLex.closeStream(); // close input stream, so we can delete replFile
                 if (replFile.delete()) {
-                    System.out.println("Input file deleted successfully !");
+                    //System.out.println("Input file deleted successfully !");
                 } else {
                     System.out.println("Input file delete operation failed !");
                 }

@@ -35,14 +35,14 @@ public class Lexer {
             // create files/ and files/repl.txt if non existent
             try {
                 if(fileFolder.mkdir()){
-                    System.out.println("Created repl/...");
+                   // System.out.println("Created repl/...");
                 } else{
-                    System.out.println("repl/ already exists");
+                   // System.out.println("repl/ already exists");
                 }
                 if(replFile.createNewFile()){
-                    System.out.println("Created input.txt...");
+                    //System.out.println("Created input.txt...");
                 } else{
-                    System.out.println("input.txt already exists.");
+                   // System.out.println("input.txt already exists.");
                 }
             } catch(IOException b){
                 b.printStackTrace();
@@ -257,13 +257,13 @@ public class Lexer {
 
     public Token getNextToken() {
         Token token = getNext();
-        System.out.println("                     got token: " + token );
+        //System.out.println("                     got token: " + token );
         return token;
     }
 
     public void putBackToken( Token token )
     {
-        System.out.println( margin + "put back token " + token.toString() );
+        //System.out.println( margin + "put back token " + token.toString() );
         stack.push( token );
     }
 
