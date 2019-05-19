@@ -24,7 +24,7 @@ public class Lexer {
          */
         try{
             // Not doing anything with this yet?
-            input = new BufferedReader(new FileReader( command ));
+            input = new BufferedReader(new FileReader( "user_defined/" + command ));
             // close defFile in P11 using closeStream()
         } catch(Exception e){
             String replFileName = "repl/input.txt";
