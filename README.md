@@ -21,6 +21,15 @@ $ java P11 test
 > (sum (1 2 3 4 5)) // Returns 15
 > (len (3 4 5 (1 2 3) (4)) // Returns 5
 > (ave (67 7 382 1 3 9)) // Returns 78.167
+> (first (1 2 3 4)) // Returns 1
+> (ins (1 2 3 4) (5 6 7 8)) // Returns (1 2 3 4 5 6 7 8)
+```
+
+#### A few examples of how to use the REPL with the file [pastri](src/user_defined/pastri) passed as an arg (Pascal's Triangle):
+```
+> (pastri 10 5) // Returns 252
+> (pastri 4 2) // Returns 6
+> (pastri 20 10) // Returns 184756
 ```
 
 # The CFG
@@ -121,10 +130,15 @@ Contains all user_defined functions, including three as an example of how user-d
 ## Notes
 * Currently, only the user_defined functions in [test](src/user_defined/test) are actually working.
 * In order for the other two to work, [Parser](src/Parser.java) may need some re-building.
+* If an error occurs, the program exits pretty ungracefully at the moment. You may have to go into the repl directory and either delete the input.txt file or delete the contents of the file. 
 
 ## TODO
-- [ ] Make changes to how lists containing functions are parsed.
-- [ ] Successfully test [pastri](src/user_defined/pastri) and [binTreeIOT](src/user_defined/binTreeIOT).
-- [ ] Remove unnecessary comments.
-- [ ] Simplify and clean up some areas in [Parser](src/Parser.java) and [Node](src/Node.java).
-- [ ] Remove any unecessary states from [Lexer](src/Lexer.java).
+- [ ] Successfully test [binTreeIOT](src/user_defined/binTreeIOT).
+- [ ] Figure out why ins isn't working recursively with [binTreeIOT](src/user_defined/binTreeIOT).
+- [ ] Make P11 not exit on error, but rather just re-send command line.
+- [X] Make changes to how lists containing functions are parsed.
+- [X] Successfully test [pastri](src/user_defined/pastri)
+- [X] Remove unnecessary comments.
+- [X] Remove unnecessary print lines.
+- [X] Simplify and clean up some areas in [Parser](src/Parser.java) and [Node](src/Node.java).
+- [X] Remove any unecessary states from [Lexer](src/Lexer.java).
