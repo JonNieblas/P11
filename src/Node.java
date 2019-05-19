@@ -14,17 +14,9 @@ public class Node {
 
     private String kind;  // non-terminal or terminal category for the node
     private String info;  // extra information about the node such as
-    // the actual identifier for an I
 
     // references to children in the parse tree
     private Node first, second, third;
-
-    private StackFrame params;
-
-    // params of memories for all pending calls
-    private static ArrayList<MemTable> memStack = new ArrayList<>();
-    // convenience reference to top MemTable on params
-    private static MemTable table = new MemTable();
 
     /** built in functions */
     // bif0 = funcs with no params
@@ -174,6 +166,7 @@ public class Node {
 
     // needs to return Value objects
     public Value evaluate(ArrayList<Node> defsList, ArrayList<String> defNames, StackFrame params) {
+        System.out.println("current kind: " + kind);
         Value arg1, arg2;
 
         Value ZERO = new Value( 0 );
@@ -215,14 +208,13 @@ public class Node {
                             if(arg1.getNumber() == 0) return ONE;
                             else return ZERO;
                         case "first":
-                            if(arg1.isEmpty()) System.out.println("Error: empty list " + arg1.toString());
-                            // might have to return something here, not sure yet though
+                            if(arg1.isEmpty() || arg1.isNull()) System.out.println("Error: empty list " + arg1.toString());
                             else return arg1.first();
                         case "rest":
                             return arg1.rest();
                         case "null":
-                            System.out.println(arg1.toString());
-                            if(arg1.isNull()) return ONE;
+                            System.out.println("Null: " + arg1.toString());
+                            if(arg1.isNull() || arg1.isEmpty()) return ONE;
                             else return ZERO;
                         case "num":
                             if(arg1.isNumber()) return ONE;
@@ -237,9 +229,6 @@ public class Node {
                             return arg1;
                     }
                 } else if(member(info, bif2)){
-
-                    // Since list can only possess one "items" node, must create
-                    // this special case
                     if(first.getKind().equals("items")) {
                         Value items = first.evaluate(defsList, defNames, params);
                             arg1 = items.first();
@@ -298,12 +287,6 @@ public class Node {
                             return newList;
                     }
                 }
-                else if(kind.equals("if")){
-                    Value condition = first.evaluate(defsList, defNames, params);
-                    System.out.println("Got condition");
-                    if(condition.getNumber() == 1) return second.evaluate(defsList, defNames, params);
-                    else return third.evaluate(defsList, defNames, params);
-                }
                 // Handles and locates user defined functions
                 else if(defNames.contains(info)){
                     int index = defNames.indexOf(info);
@@ -311,6 +294,7 @@ public class Node {
                     Node def = defsList.get(index);
                     if(def.first.getKind().equals("params")) {
                         params = passParams(def, defsList, defNames, first, params); // evaluate the params passed
+                        System.out.println("Params: " + params.toString());
                         return def.second.evaluate(defsList, defNames, params);
                     } else{
                         return def.first.evaluate(defsList, defNames,params);
@@ -325,23 +309,31 @@ public class Node {
                 return first.evaluate(defsList, defNames, params);
             }
         }
+        else if(kind.equals("if")){
+            Value condition = first.evaluate(defsList, defNames, params);
+            if(condition.getNumber() == 1) return second.evaluate(defsList, defNames, params);
+            else return third.evaluate(defsList, defNames, params);
+        }
         else{ // items
             System.out.println("Evaluating items...");
             Value items = new Value();
 
-
             if (second == null){
+                System.out.println("Inserting " + first.toString());
+                if(first.getKind().equals("name")){
+                    if(params.retrieve(first.info).isEmpty()){
+
+                    }
+                    Value holder = first.evaluate(defsList, defNames, params);
+                    if(!holder.isNull()) return holder;
+                }
                 items = items.insert(first.evaluate(defsList, defNames, params));
                 return items;
             }
             else{
                 System.out.println(second.toString());
                 items = second.evaluate(defsList, defNames, params);
-                System.out.println("Got second: " + items.toString());
-
                 items = items.insert(first.evaluate(defsList, defNames, params));
-                System.out.println("Got first");
-
                 return items;
             }
         }
@@ -364,20 +356,31 @@ public class Node {
         StackFrame p = new StackFrame();
         ArrayList<String> paramNames = new ArrayList<>();
 
+        Value f = null;
+        Value r = null;
+
         // get user params as a list
         Value userParamsList = userParams.evaluate(defsList, defNames, params);
-        Value f = userParamsList.first();
-        Value r = userParamsList.rest();
+        if(!userParamsList.isEmpty()) {
+            f = userParamsList.first();
+            r = userParamsList.rest();
+        }
 
         // get def param names
         Node param = def.first;
+
+        // if multiple args, but only one param (for lists)
+        if(param.first == null && r != null){
+            paramNames.add(param.getInfo());
+            p.add(param.getInfo(), userParamsList);
+            return p;
+        }
 
         while(param != null){
             // extract all param names from original def
             paramNames.add(param.getInfo());
             param = param.first;
         }
-
 
         // add all names and values to StackFrame p
         for(int i = 0; i < paramNames.size(); i++){
@@ -392,6 +395,7 @@ public class Node {
                 }
             }
         }
+
         return p;
     }
 

@@ -2,7 +2,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Corgi {
+public class P11 {
     public static void main(String[] args){
         String name;
 
@@ -10,7 +10,7 @@ public class Corgi {
             name = args[0];
         }
         else {
-            System.out.print("Enter name of Corgi program file: ");
+            System.out.print("Enter name of P11 program file: ");
             Scanner keys = new Scanner( System.in );
             name = keys.nextLine();
         }
@@ -21,9 +21,12 @@ public class Corgi {
         Scanner scan = new Scanner(System.in);
         Node root2 = fileParser.parseProgram();
         fileLex.closeStream();
+       //TreeViewer viewer = new TreeViewer("Parse Tree", 0, 0, 800, 500, root2);
+
 
         ArrayList<Node> defs = fileParser.getDefs(); // will this work?
         ArrayList<String> defNames = fileParser.getDefNames();
+
 
 
         System.out.println("\nPlease input a command below: ");
@@ -48,12 +51,12 @@ public class Corgi {
 
             // try deleting repl.txt
             try {
-                File replFile = new File("files/repl.txt");
+                File replFile = new File("repl/input.txt");
                 inputLex.closeStream(); // close input stream, so we can delete replFile
                 if (replFile.delete()) {
-                    System.out.println("File deleted successfully !");
+                    System.out.println("Input file deleted successfully !");
                 } else {
-                    System.out.println("File delete operation failed !");
+                    System.out.println("Input file delete operation failed !");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

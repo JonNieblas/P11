@@ -25,24 +25,24 @@ public class Lexer {
         try{
             // Not doing anything with this yet?
             input = new BufferedReader(new FileReader( command ));
-            // close defFile in Corgi using closeStream()
+            // close defFile in P11 using closeStream()
         } catch(Exception e){
-            String replFileName = "files/repl.txt";
-            String fileFolderName = "files/";
+            String replFileName = "repl/input.txt";
+            String fileFolderName = "repl/";
             File replFile = new File(replFileName);
             File fileFolder = new File(fileFolderName);
 
             // create files/ and files/repl.txt if non existent
             try {
                 if(fileFolder.mkdir()){
-                    System.out.println("Created files/...");
+                    System.out.println("Created repl/...");
                 } else{
-                    System.out.println("files/ already exists");
+                    System.out.println("repl/ already exists");
                 }
                 if(replFile.createNewFile()){
-                    System.out.println("Created repl.txt...");
+                    System.out.println("Created input.txt...");
                 } else{
-                    System.out.println("repl.txt already exists.");
+                    System.out.println("input.txt already exists.");
                 }
             } catch(IOException b){
                 b.printStackTrace();
