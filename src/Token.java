@@ -6,6 +6,7 @@ public class Token
     public Token( String k, String d )
     {
         kind = k;  details = d;
+        //System.out.println(this);
     }
 
     public boolean isKind( String s )
@@ -18,10 +19,6 @@ public class Token
 
     public String getDetails()
     { return details; }
-
-    public boolean matches( String k, String d ) {
-        return kind.equals(k) && details.equals(d);
-    }
 
     public String toString()
     {

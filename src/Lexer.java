@@ -58,7 +58,7 @@ public class Lexer {
 
                 input = new BufferedReader(new FileReader(replFile));
             } catch (IOException c){
-                System.out.println("failed to create and write file");
+                System.out.println("Failed to create and write input file.");
                 c.printStackTrace();
             }
         }
@@ -226,9 +226,6 @@ public class Lexer {
             }
             if(state == 4){
                 return new Token("NUMBER",data);
-            }
-            if ( state == 5 ) {
-                return new Token("COMMENT",data);
             }
             else if ( state == 6 ) {
                 return new Token("DECIMAL NUMBER", data);

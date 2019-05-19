@@ -100,9 +100,10 @@ public class Value {
             return new Value();
         }
         else if ( list.size() == 0 ) {
-            System.out.println("Rest: Oops, this Value is an empty list");
-            System.exit(1);
-            return null;
+//            System.out.println("Rest: Oops, this Value is an empty list");
+//            System.exit(1);
+//            return null;
+            return new Value();
         }
         else {// is a list and has a first element
             // call copy constructor

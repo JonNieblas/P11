@@ -13,9 +13,9 @@
 )
 
 ; combine list1 and list2 into one list
-(define (combine list1 list2)
-    (if (null list1)
-        list2
-        (ins (first list1) (combine (rest list1) list2))
+(define (combine one two)
+    (if (null one)
+        two
+        (ins (first one) (combine (rest two) one))
     )
 )

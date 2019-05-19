@@ -58,8 +58,10 @@ public class Parser {
 
         token = lex.getNextToken();
         errorCheck(token, "LPAREN", "(");
-
+        System.out.println("before: " + token.toString());
         Token name = lex.getNextToken();
+        System.out.println("after: " + name.toString());
+
         errorCheck(name, "NAME");
         token = lex.getNextToken();
 

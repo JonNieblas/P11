@@ -213,7 +213,6 @@ public class Node {
                         case "rest":
                             return arg1.rest();
                         case "null":
-                            //System.out.println("Null: " + arg1.toString());
                             if(arg1.isNull() || arg1.isEmpty()) return ONE;
                             else return ZERO;
                         case "num":
@@ -223,7 +222,7 @@ public class Node {
                             if(!arg1.isNull()) return ONE;
                             else return ZERO;
                         case "write":
-                            System.out.println(arg1 + " ");
+                            System.out.println("write: " + arg1 + " ");
                             return arg1;
                         case "quote":
                             return arg1;
@@ -281,9 +280,11 @@ public class Node {
                             if(arg1.getNumber() > 0 || arg2.getNumber() > 0) return ONE;
                             else return ZERO;
                         case "ins":
-                            Value newList = new Value();
-                            newList.insert(arg1);
-                            newList.insert(arg2);
+                            Value newList = arg2;
+                            newList = arg2.insert(arg1);
+                            System.out.println("after ins: " + newList.toString());
+                            System.out.println("arg1: " + arg1.toString());
+                            System.out.println("arg2: " + arg2.toString());
                             return newList;
                     }
                 }
